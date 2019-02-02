@@ -1,9 +1,9 @@
 #include <Servo.h>
 
+Servo servo_5;
+
 const int ECHOPIN = 4;
 const int TRIGPIN = 2;
-
-Servo servo_5;
 
 const int dirLeft = 12;
 const int dirRight = 13;
@@ -12,11 +12,10 @@ const int pwmRight = 11;
 const int brakeLeft = 9;
 const int brakeRight = 8;
 
-float dis, disR, disL;
-
 const char bothSpeed = 200;
-const char turnSpeed = 100;
-const char quarterSpeed = (bothSpeed / 4);
+const char turnSpeed = 120;
+
+float disF, disR, disL;
 
 void setup()
 {
@@ -35,27 +34,43 @@ void setup()
 
 void loop()
 {
-    
-    // servoLeft();
-    // servoForward();
-    // servoRight();
-    // servoForward();
 
-    // while (digitalRead(sensorSignal) == HIGH)
-    //  {
-    //  digitalWrite(ledRight, HIGH);
-    //  digitalWrite(ledLeft, HIGH);
-    //   if (rangeCalc() < 50)
-    //   {
-    //       turnRight();
-    //   }
-    //    else
-     //   {
-        //    forward();
-         //   digitalWrite(ledRight, HIGH);
-         //   digitalWrite(ledLeft, HIGH);
-     //   }
-  //  }
+    
+
+    servoForward(95);
+    disF = rangeCalc();
+    delay(500);
+    servoLeft(20);
+    disL = rangeCalc();
+    delay(500);
+    servoForward(95);
+    disF = rangeCalc();
+    delay(500);
+    servoRight(165);
+    disR = rangeCalc();
+    delay(500);
+
+    if (rangeCalc() < 30)
+    {
+        if (disR < 30 && disL < 30 && disF < 30) 
+        {
+            reverse();
+        }
+        else if (disL > disR)
+        {
+            turnLeft();
+        }
+        else if (disR > disL)
+        {
+            turnRight();
+        }
+    }
+    else
+    {
+        forward();
+    }
+
+    
 }
 
 float rangeCalc()
@@ -73,8 +88,6 @@ float rangeCalc()
 
 void turnRight()
 {
-    
-
     digitalWrite(dirLeft, HIGH);
     digitalWrite(dirRight, HIGH);
     analogWrite(pwmLeft, turnSpeed);
@@ -83,8 +96,6 @@ void turnRight()
 
 void turnLeft()
 {
-    
-
     digitalWrite(dirLeft, LOW);
     digitalWrite(dirRight, LOW);
     analogWrite(pwmLeft, turnSpeed);
@@ -93,8 +104,6 @@ void turnLeft()
 
 void forward()
 {
-    
-
     digitalWrite(dirLeft, LOW);
     digitalWrite(dirRight, HIGH);
     analogWrite(pwmLeft, bothSpeed);
@@ -103,29 +112,23 @@ void forward()
 
 void reverse()
 {
-    
-
-    digitalWrite(dirLeft, LOW);
-    digitalWrite(dirRight, HIGH);
-
+    digitalWrite(dirLeft, HIGH);
+    digitalWrite(dirRight, LOW);
     analogWrite(pwmLeft, bothSpeed);
     analogWrite(pwmRight, bothSpeed);
 }
 
-void servoForward()
+void servoForward(short pos)
 {
-    servo_5.write(95);
-    delay(500);
+    servo_5.write(pos);
 }
 
-void servoLeft()
+void servoLeft(short pos)
 {
-    servo_5.write(20);
-    delay(500);
+    servo_5.write(pos);
 }
 
-void servoRight()
+void servoRight(short pos)
 {
-    servo_5.write(165);
-    delay(500);
+    servo_5.write(pos);
 }
