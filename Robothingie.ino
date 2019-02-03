@@ -12,10 +12,12 @@ const int pwmRight = 11;
 const int brakeLeft = 9;
 const int brakeRight = 8;
 
-const char bothSpeed = 200;
+const char bothSpeed = 100;
 const char turnSpeed = 120;
 
 float disF, disR, disL;
+
+const int rangeLimit = 30;
 
 void setup()
 {
@@ -35,32 +37,18 @@ void setup()
 void loop()
 {
 
-    
-
-    servoForward(95);
-    disF = rangeCalc();
-    delay(500);
-    servoLeft(20);
-    disL = rangeCalc();
-    delay(500);
-    servoForward(95);
-    disF = rangeCalc();
-    delay(500);
-    servoRight(165);
-    disR = rangeCalc();
-    delay(500);
-
-    if (rangeCalc() < 30)
+    if (rangeCalc() < rangeLimit)
     {
-        if (disR < 30 && disL < 30 && disF < 30) 
-        {
-            reverse();
-        }
-        else if (disL > disR)
+        
+        if (disL > disR)
         {
             turnLeft();
         }
         else if (disR > disL)
+        {
+            turnRight();
+        }
+        else
         {
             turnRight();
         }
@@ -69,9 +57,18 @@ void loop()
     {
         forward();
     }
-
     
+    servoLeft(20);
+    delay(300);
+    disL = rangeCalc();
+    servoRight(165);
+    delay(300);
+    disR = rangeCalc();
+    servoForward(95);
+    delay(300);
+    disF = rangeCalc();
 }
+
 
 float rangeCalc()
 {
@@ -80,8 +77,7 @@ float rangeCalc()
     digitalWrite(TRIGPIN, HIGH);
     delay(10);
     digitalWrite(TRIGPIN, LOW);
-    float distance = pulseIn(ECHOPIN, HIGH);
-    distance = distance / 58;
+    float distance = 0.01723 * pulseIn(ECHOPIN, HIGH);
 
     return distance;
 }
@@ -90,16 +86,16 @@ void turnRight()
 {
     digitalWrite(dirLeft, HIGH);
     digitalWrite(dirRight, HIGH);
-    analogWrite(pwmLeft, turnSpeed);
-    analogWrite(pwmRight, turnSpeed);
+    analogWrite(pwmLeft, bothSpeed);
+    analogWrite(pwmRight, bothSpeed);
 }
 
 void turnLeft()
 {
     digitalWrite(dirLeft, LOW);
     digitalWrite(dirRight, LOW);
-    analogWrite(pwmLeft, turnSpeed);
-    analogWrite(pwmRight, turnSpeed);
+    analogWrite(pwmLeft, bothSpeed);
+    analogWrite(pwmRight, bothSpeed);
 }
 
 void forward()
