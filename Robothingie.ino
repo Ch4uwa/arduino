@@ -1,52 +1,67 @@
-#include <NewPing.h>
 #include <Servo.h>
+#include <NewPing.h>
 
-#define ECHOPIN 4
-#define TRIGPIN 2
+const int ECHOPIN = A3;
+const int TRIGPIN = A2;
 
-#define MOTORLEFT 12
-#define MOTORRIGHT 13
-#define pwmLeft 3
-#define pwmRight 11
-#define brakeLeft 9
-#define brakeRight 8
+const int MOTORLEFT = 12;
+const int MOTORRIGHT = 13;
+const int pwmLeft = 3;
+const int pwmRight = 11;
+const int brakeLeft = 9;
+const int brakeRight = 8;
 
-#define MAXSPEED 100
-#define MAXDISTANCE 200
+const int MAXSPEED = 180;
+const int MAXDISTANCE = 200;
 
+boolean start=true;
+boolean goesForward = false;
+int distance = 100;
+
+
+
+NewPing sonar(A2, A3, MAXDISTANCE);
 Servo servo_5;
-NewPing sonar(TRIGPIN, ECHOPIN, MAXDISTANCE);
-bool goesForward = false;
-int distance = 0;
+
 
 void setup()
 {
     pinMode(MOTORLEFT, OUTPUT);
     pinMode(MOTORRIGHT, OUTPUT);
+    pinMode(pwmLeft, OUTPUT);
+    pinMode(pwmRight, OUTPUT);
     pinMode(brakeLeft, OUTPUT);
     pinMode(brakeRight, OUTPUT);
     digitalWrite(brakeLeft, 0);
     digitalWrite(brakeRight, 0);
+    
     servo_5.attach(5);
-    servo_5.write(95);
-    delay(300);
-    distance = readPing();
-    delay(100);
-    distance = readPing();
-    delay(100);
-    distance = readPing();
-    delay(100);
-    distance = readPing();
-    delay(100);
+    
+    
 }
 
 void loop()
 {
+    if(start)
+    {
+      start=false;
+      servo_5.write(90);
+      delay(2000);
+      distance = readPing();
+      delay(100);
+      distance = readPing();
+      delay(100);
+      distance = readPing();
+      delay(100);
+      distance = readPing();
+      delay(100);
+    }
+    
     int distanceRight = 0;
     int distanceLeft = 0;
     delay(40);
 
-    if (distance <= 15)
+    if (distance <= 20)
     {
         moveStop();
         delay(100);
@@ -117,7 +132,7 @@ void moveForward()
         goesForward = true;
         digitalWrite(MOTORLEFT, LOW);
         digitalWrite(MOTORRIGHT, HIGH);
-        for (size_t speed = 0; speed < MAXSPEED; speed + 2)
+        for (size_t speed = 0; speed < MAXSPEED; speed++)
         {
             analogWrite(pwmLeft, speed);
             analogWrite(pwmRight, speed);
@@ -132,7 +147,7 @@ void moveBackwards()
     digitalWrite(MOTORLEFT, HIGH);
     digitalWrite(MOTORRIGHT, LOW);
 
-    for (size_t speed = 0; speed < MAXSPEED; speed + 2)
+    for (size_t speed = 0; speed < MAXSPEED; speed++)
     {
         analogWrite(pwmLeft, speed);
         analogWrite(pwmRight, speed);
@@ -142,20 +157,22 @@ void moveBackwards()
 
 int lookLeft()
 {
-    servo_5.write(15);
+    servo_5.write(10);
     delay(500);
-    int distance = readPing();
-    servo_5.write(95);
+    distance = readPing();
     delay(100);
+    servo_5.write(90);
+    
     return distance;
 }
 
 int lookRight()
 {
-    servo_5.write(165);
+    servo_5.write(170);
     delay(500);
-    int distance = readPing();
-    servo_5.write(95);
+    distance = readPing();
     delay(100);
+    servo_5.write(90);
+    
     return distance;
 }
