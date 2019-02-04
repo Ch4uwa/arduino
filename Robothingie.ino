@@ -115,10 +115,20 @@ void turnRight()
     digitalWrite(MOTORRIGHT, HIGH);
     analogWrite(pwmLeft, MAXSPEED);
     analogWrite(pwmRight, MAXSPEED);
+    delay(500);
+    digitalWrite(MOTORLEFT, HIGH);
+    digitalWrite(MOTORRIGHT, HIGH);
+    analogWrite(pwmLeft, MAXSPEED);
+    analogWrite(pwmRight, MAXSPEED);
 }
 
 void turnLeft()
 {
+    digitalWrite(MOTORLEFT, LOW);
+    digitalWrite(MOTORRIGHT, LOW);
+    analogWrite(pwmLeft, MAXSPEED);
+    analogWrite(pwmRight, MAXSPEED);
+    delay(500);
     digitalWrite(MOTORLEFT, LOW);
     digitalWrite(MOTORRIGHT, LOW);
     analogWrite(pwmLeft, MAXSPEED);
