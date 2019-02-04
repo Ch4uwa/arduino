@@ -11,8 +11,8 @@
 #define brakeLeft 9
 #define brakeRight 8
 
-#define MAXSPEED 100
-#define MAXDISTANCE 200
+const int MAXSPEED = 180;
+const int MAXDISTANCE = 200;
 
 Servo servo_5;
 NewPing sonar(TRIGPIN, ECHOPIN, MAXDISTANCE);
@@ -23,10 +23,13 @@ void setup()
 {
     pinMode(MOTORLEFT, OUTPUT);
     pinMode(MOTORRIGHT, OUTPUT);
+    pinMode(pwmRight,OUTPUT);
+    pinMode(pwmLeft,OUTPUT);
     pinMode(brakeLeft, OUTPUT);
     pinMode(brakeRight, OUTPUT);
     digitalWrite(brakeLeft, 0);
     digitalWrite(brakeRight, 0);
+
     servo_5.attach(5);
     servo_5.write(95);
     delay(300);
@@ -144,7 +147,7 @@ int lookLeft()
 {
     servo_5.write(15);
     delay(500);
-    int distance = readPing();
+    distance = readPing();
     servo_5.write(95);
     delay(100);
     return distance;
@@ -154,7 +157,7 @@ int lookRight()
 {
     servo_5.write(165);
     delay(500);
-    int distance = readPing();
+    distance = readPing();
     servo_5.write(95);
     delay(100);
     return distance;
