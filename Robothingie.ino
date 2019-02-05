@@ -14,15 +14,12 @@ const int brakeRight = 8;
 const int MAXSPEED = 180;
 const int MAXDISTANCE = 200;
 
-boolean start=true;
+boolean start = true;
 boolean goesForward = false;
 int distance = 100;
 
-
-
 NewPing sonar(A2, A3, MAXDISTANCE);
 Servo servo_5;
-
 
 void setup()
 {
@@ -34,29 +31,27 @@ void setup()
     pinMode(brakeRight, OUTPUT);
     digitalWrite(brakeLeft, 0);
     digitalWrite(brakeRight, 0);
-    
+
     servo_5.attach(5);
-    
-    
 }
 
 void loop()
 {
-    if(start)
+    if (start)
     {
-      start=false;
-      servo_5.write(90);
-      delay(2000);
-      distance = readPing();
-      delay(100);
-      distance = readPing();
-      delay(100);
-      distance = readPing();
-      delay(100);
-      distance = readPing();
-      delay(100);
+        start = false;
+        servo_5.write(90);
+        delay(2000);
+        distance = readPing();
+        delay(100);
+        distance = readPing();
+        delay(100);
+        distance = readPing();
+        delay(100);
+        distance = readPing();
+        delay(100);
     }
-    
+
     int distanceRight = 0;
     int distanceLeft = 0;
     delay(40);
@@ -74,7 +69,7 @@ void loop()
         distanceLeft = lookLeft();
         delay(200);
 
-        if (distanceRight >= distanceLeft)
+        if (distanceRight > distanceLeft)
         {
             turnRight();
             moveStop();
@@ -107,6 +102,11 @@ void moveStop()
 {
     analogWrite(pwmLeft, 0);
     analogWrite(pwmRight, 0);
+    digitalWrite(brakeLeft, HIGH);
+    digitalWrite(brakeRight, HIGH);
+    delay(5);
+    digitalWrite(brakeLeft, LOW);
+    digitalWrite(brakeRight, LOW);
 }
 
 void turnRight()
@@ -167,22 +167,22 @@ void moveBackwards()
 
 int lookLeft()
 {
-    servo_5.write(10);
+    servo_5.write(15);
     delay(500);
     distance = readPing();
     delay(100);
-    servo_5.write(90);
-    
+    servo_5.write(95);
+
     return distance;
 }
 
 int lookRight()
 {
-    servo_5.write(170);
+    servo_5.write(165);
     delay(500);
     distance = readPing();
     delay(100);
-    servo_5.write(90);
-    
+    servo_5.write(95);
+
     return distance;
 }
